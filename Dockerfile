@@ -25,7 +25,10 @@ COPY . /var/www
 COPY --chown=www-data:www-data . /var/www
 
 # Install dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+# Set permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
