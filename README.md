@@ -19,7 +19,21 @@ git clone https://github.com/illiatasminskyi/ueex-company-versioning-api.git
 cd ueex-company-versioning-api
 ```
 
-### Крок 2: Запуск через Docker
+### Крок 2: Налаштування середовища
+
+**Створення файлу .env:**
+```bash
+# Копіювання шаблону конфігурації
+cp .env.example .env
+```
+
+**Генерація ключа додатку:**
+```bash
+# Після запуску контейнерів
+docker-compose exec app php artisan key:generate
+```
+
+### Крок 3: Запуск через Docker
 
 ```bash
 # Запуск контейнерів
@@ -77,4 +91,56 @@ docker-compose exec app php artisan test tests/Feature/CompanyApiTest.php
 
 ```bash
 docker-compose exec app php artisan l5-swagger:generate
+```
+
+## Найпоширеніші проблеми
+
+### Проблема: Connection refused при міграції
+
+Якщо отримуєте помилку `Connection refused` при спробі запуску міграції:
+
+1. **Перевірте, що .env файл існує:**
+   ```bash
+   ls -la .env
+   ```
+   Якщо файл відсутній, скопіюйте з шаблону:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Перевірте статус контейнерів:**
+   ```bash
+   docker-compose ps
+   ```
+
+3. **Дочекайтеся готовності MySQL:**
+   ```bash
+   # Перевірте логи MySQL
+   docker-compose logs db
+   
+   # Або дочекайтеся healthcheck
+   docker-compose ps db
+   ```
+
+4. **Перезапустіть контейнери при необхідності:**
+   ```bash
+   docker-compose down
+   docker-compose up -d
+   ```
+
+### Проблема: Відсутній APP_KEY
+
+Якщо отримуєте помилку про відсутній APP_KEY:
+
+```bash
+docker-compose exec app php artisan key:generate
+```
+
+### Проблема: Права доступу
+
+Якщо виникають проблеми з правами доступу:
+
+```bash
+sudo chown -R $USER:$USER storage bootstrap/cache
+sudo chmod -R 775 storage bootstrap/cache
 ```
