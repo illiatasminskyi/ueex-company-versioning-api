@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+vendor
+.git
+.gitignore
+README.md
+.env
+.env.backup
+.phpunit.result.cache
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
