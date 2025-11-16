@@ -21,30 +21,24 @@ cd ueex-company-versioning-api
 
 ### Крок 2: Запуск через Docker
 
-**Автоматичний запуск контейнерів:**
-```bash
-./init.sh
-```
-
-**Потім виконайте вручну:**
-```bash
-# Встановлення залежностей
-docker-compose exec app composer install
-
-# Міграції та тестові дані (можна виконати коли MySQL готовий)
-docker-compose exec app php artisan migrate:fresh --seed --force
-```
-
-**Альтернатива - повний ручний контроль:**
 ```bash
 # Запуск контейнерів
 docker-compose up -d --build
 
-# Очікування та встановлення залежностей
+# Встановлення залежностей
 docker-compose exec app composer install
 
-# Міграції (виконати коли база готова)
+# Міграції та тестові дані (виконати коли MySQL готовий)
 docker-compose exec app php artisan migrate:fresh --seed --force
+```
+
+**Перевірка готовності MySQL:**
+```bash
+# Статус контейнерів
+docker-compose ps
+
+# Логи MySQL (якщо потрібно)
+docker-compose logs db
 ```
 
 ### Крок 3: Перевірка роботи
