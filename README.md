@@ -32,6 +32,9 @@ cd ueex-company-versioning-api
 # Збірка та запуск всіх контейнерів
 docker-compose up -d --build
 
+# Встановлення залежностей
+docker-compose exec app composer install
+
 # Очікування готовності MySQL
 docker-compose exec app bash -c 'until php artisan migrate:status >/dev/null 2>&1; do sleep 1; done'
 

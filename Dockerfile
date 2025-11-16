@@ -18,14 +18,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
+# Copy composer files first
+COPY composer.json composer.lock ./
+
+# Install dependencies (skip scripts that require artisan)
+RUN composer install --no-interaction --no-dev --no-scripts
+
 # Copy existing application directory contents
 COPY . /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www-data:www-data . /var/www
 
-# Install dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+# Run composer scripts now that artisan is available
+RUN composer run-script post-autoload-dump
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache

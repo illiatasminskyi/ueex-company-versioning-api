@@ -5,13 +5,25 @@ echo "🚀 Starting UEEX Company Versioning API..."
 # Build and start containers
 docker-compose up -d --build
 
-# Wait for database to be healthy
-echo "⏳ Waiting for database to be ready..."
-docker-compose exec app bash -c 'until php artisan migrate:status >/dev/null 2>&1; do sleep 1; done'
+# Wait for containers to fully initialize
+echo "⏳ Waiting for containers to initialize (10 seconds)..."
+sleep 10
 
-# Run migrations and seeders
+# Install composer dependencies
+echo "📦 Installing dependencies..."
+if ! docker-compose exec app composer install --no-interaction; then
+    echo "⚠️  First attempt failed, waiting additional 10 seconds..."
+    sleep 10
+    docker-compose exec app composer install --no-interaction
+fi
+
+# Run migrations and seeders with retry
 echo "📊 Running migrations and seeders..."
-docker-compose exec app php artisan migrate:fresh --seed --force
+if ! docker-compose exec app php artisan migrate:fresh --seed --force; then
+    echo "⚠️  Migration failed, waiting additional 10 seconds..."
+    sleep 10
+    docker-compose exec app php artisan migrate:fresh --seed --force
+fi
 
 echo "✅ Setup complete!"
 echo ""
