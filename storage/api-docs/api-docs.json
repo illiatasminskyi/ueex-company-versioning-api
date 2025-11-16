@@ -1,0 +1,225 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Company Versioning API",
+        "description": "API для управління компаніями з підтримкою версійності",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/company": {
+            "post": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Створити або оновити компанію",
+                "description": "Створює нову компанію або оновлює існуючу з автоматичною версійністю",
+                "operationId": "ac0540bd05d26472283ac368a6cf6e6e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "edrpou",
+                                    "address"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 256,
+                                        "example": "ТОВ Українська енергетична біржа"
+                                    },
+                                    "edrpou": {
+                                        "type": "string",
+                                        "maxLength": 10,
+                                        "example": "37027819"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "01001, Україна, м. Київ, вул. Хрещатик, 44"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Компанію створено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "created"
+                                        },
+                                        "company_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "version": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Компанію оновлено або дублікат",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "updated"
+                                                },
+                                                "company_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "version": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        {
+                                            "properties": {
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "duplicate"
+                                                },
+                                                "company_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Помилка валідації",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        },
+                                        "messages": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/company/{edrpou}/versions": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Отримати всі версії компанії",
+                "description": "Повертає список всіх версій компанії за ЄДРПОУ",
+                "operationId": "e8bc179d0d7915efbff44e6b3cc04d82",
+                "parameters": [
+                    {
+                        "name": "edrpou",
+                        "in": "path",
+                        "description": "ЄДРПОУ компанії",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "37027819"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список версій компанії",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "version": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "ТОВ Українська Енергетична Біржа"
+                                            },
+                                            "edrpou": {
+                                                "type": "string",
+                                                "example": "37027819"
+                                            },
+                                            "address": {
+                                                "type": "string",
+                                                "example": "м. Київ, вул. Хрещатик, 22"
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "datetime",
+                                                "example": "2025-01-01 10:00:00"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Компанію не знайдено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Company not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Companies",
+            "description": "Companies"
+        }
+    ]
+}

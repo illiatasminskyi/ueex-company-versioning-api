@@ -14,12 +14,26 @@ class CompanyVersion extends Model
         'version',
         'name',
         'edrpou',
-        'address'
+        'address',
+        'created_at'
     ];
     
     public $timestamps = false;
     
-    protected $dates = ['created_at'];
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
+    
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($model) {
+            if (!$model->created_at) {
+                $model->created_at = now();
+            }
+        });
+    }
     
     public function company(): BelongsTo
     {

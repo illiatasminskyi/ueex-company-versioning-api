@@ -20,7 +20,7 @@ class CompanySeeder extends Seeder
                 'company' => [
                     'name' => 'ТОВ Українська Енергетична Біржа',
                     'edrpou' => '37027819',
-                    'address' => 'м. Київ, вул. Хрещатик, 22',
+                    'address' => 'м. Київ, вул. Хрещатик, 22А, офіс 501',
                 ],
                 'versions' => [
                     [
@@ -39,7 +39,7 @@ class CompanySeeder extends Seeder
             ],
             [
                 'company' => [
-                    'name' => 'ТОВ Ромашка',
+                    'name' => 'ТОВ Ромашка Плюс',
                     'edrpou' => '12345678',
                     'address' => 'м. Львів, вул. Городоцька, 15',
                 ],
@@ -62,7 +62,7 @@ class CompanySeeder extends Seeder
                 'company' => [
                     'name' => 'ТОВ ТехноСервіс',
                     'edrpou' => '87654321',
-                    'address' => 'м. Харків, проспект Науки, 10',
+                    'address' => 'м. Харків, проспект Науки, 12, корпус Б',
                 ],
                 'versions' => [
                     [
